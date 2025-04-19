@@ -8,3 +8,12 @@ v1 = 5
 v2 = 6
 v3 = AddTwoNumbers(v1,v2)
 print(str(v3))
+
+def AddTwoNumbers(x, y):
+    result = x + y  # Corrected the operation from subtraction to addition
+    return result
+
+v1 = 5
+v2 = 6
+v3 = AddTwoNumbers(v1, v2)
+print(str(v3))
