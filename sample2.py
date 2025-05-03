@@ -246,3 +246,82 @@ if __name__ == "__main__":
     main()
 
 
+import math
+
+multiChannel = 0
+
+def IsValidChannelID(channelID):
+    if channelID in [1, 2, 3]:
+        return True
+    else:
+        print(f"Invalid channel ID: {channelID}. Operation not performed.")
+        return False
+
+def ValidateValue(value):
+    if 0 <= value < 999:  # Allowing 0 as a valid value
+        return True
+    else:
+        print("Value out of range, operation not performed")
+        return False
+
+def ChannelSubtract(channelID, value):
+    global multiChannel
+    if not IsValidChannelID(channelID): return
+    currentValue = ChannelGetValue(channelID)
+    currentValue -= value
+    if ValidateValue(currentValue):
+        ChannelSetValue(channelID, currentValue)
+
+def ChannelAdd(channelID, value):
+    global multiChannel
+    if not IsValidChannelID(channelID): return
+    currentValue = ChannelGetValue(channelID)
+    currentValue += value
+    if ValidateValue(currentValue):
+        ChannelSetValue(channelID, currentValue)
+
+def ChannelSetValue(channelID, value):
+    global multiChannel
+    if not IsValidChannelID(channelID) or not ValidateValue(value): return
+    ChannelClear(channelID)
+    value *= (1000**(channelID - 1))
+    multiChannel += value
+
+def ChannelClear(channelID):
+    global multiChannel
+    if channelID == -1:
+        multiChannel = 0
+    elif IsValidChannelID(channelID):
+        channelValue = ChannelGetValue(channelID)
+        multiChannel -= channelValue * (1000**(channelID - 1))
+
+def ChannelGetValue(channelID):
+    if not IsValidChannelID(channelID): return 0
+    return math.floor(multiChannel % (1000**channelID) / (1000**(channelID - 1)))
+
+def DisplayAllChannels():
+    for channelID in range(1, 4):
+        print(f"Channel {channelID} is {ChannelGetValue(channelID)}")
+
+###DO NOT ALTER ANY CODE BELOW THIS LINE###
+
+def main():
+    global multiChannel
+    multiChannel = 123456789
+    ChannelSetValue(2, 555)
+    ChannelSubtract(2, 111)
+    DisplayAllChannels()
+    ChannelClear(-1)
+    ChannelSubtract(3, 1)
+    ChannelSetValue(1, 111)
+    ChannelSetValue(2, 888)
+    DisplayAllChannels()
+    ChannelSubtract(1, 111)
+    ChannelAdd(2, 111)
+    ChannelAdd(3, 5555)
+    DisplayAllChannels()
+
+if __name__ == "__main__":
+    main()
+
+print("Program terminated")
